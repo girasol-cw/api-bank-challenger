@@ -1,0 +1,8 @@
+# application.yml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/com_apibancaria
+    username: postgres
+    password: "1991"
+    server:
+      port: 6543
