@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS address (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabela accounts (no plural) - substitua pela estrutura completa da sua tabela
+-- Tabela accounts
 CREATE TABLE IF NOT EXISTS accounts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     first_name VARCHAR(50) NOT NULL,
