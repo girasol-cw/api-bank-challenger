@@ -10,5 +10,6 @@ import java.util.UUID;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     List<Transaction> findByAccountId(UUID accountId);
+    void deleteByAccountId(UUID accountId);
 
 }

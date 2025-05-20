@@ -220,6 +220,7 @@ public class AccountService {
     @Transactional
     public void deleteAccount(UUID accountId) throws AccountNotFoundException {
         Account account = getAccountOrThrow(accountId);
+        transactionRepository.deleteByAccountId(accountId);
         accountRepository.delete(account);
     }
 }

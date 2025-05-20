@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS address (
 );
 
 -- Tabela accounts (no plural) - substitua pela estrutura completa da sua tabela
--- Tabela accounts (no plural) - substitua pela estrutura completa da sua tabela
 CREATE TABLE IF NOT EXISTS accounts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     first_name VARCHAR(50) NOT NULL,

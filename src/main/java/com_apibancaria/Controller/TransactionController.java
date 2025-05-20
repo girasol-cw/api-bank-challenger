@@ -25,6 +25,9 @@ public class TransactionController {
         this.accountService = accountService;
     }
 
+
+
+    // Comando para depositar
     @PostMapping("/{accountId}/deposit")
     public ResponseEntity<Map<String, BigDecimal>> deposit(
             @PathVariable UUID accountId,
@@ -40,6 +43,7 @@ public class TransactionController {
         }
     }
 
+    // Comando para sacar
     @PostMapping("/{accountId}/withdraw")
     public ResponseEntity<Map<String, BigDecimal>> withdraw(
             @PathVariable UUID accountId,
@@ -57,10 +61,11 @@ public class TransactionController {
         }
     }
 
+    // Comando para transferir
     @PostMapping("/{accountId}/transfer")
     public ResponseEntity<Void> transfer(
             @PathVariable UUID accountId,
-            @RequestBody @Valid TransferDto transferDto) { // Usando TransferDto
+            @RequestBody @Valid TransferDto transferDto) {
         try {
             accountService.transfer(
                     accountId,

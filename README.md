@@ -29,7 +29,7 @@ Abaixo estão os endpoints que essa API deve fernecer:
 
 ### 1. Criar Conta
 
-- **POST** `/account`
+- **POST** `/accounts`
 - **Descrição**: Cria uma nova conta bancária, informando as dados pessoais do usuário.
 A responsta será o número da conta e o nome completo do usuário.
 
@@ -80,7 +80,7 @@ A responsta será o número da conta e o nome completo do usuário.
 
 ### 2. Atualizar Dados da Conta
 
-- **PUT** `/account/{accountId}`
+- **PUT** `/accounts/{id}`
 - **Descrição**: Atualizar dados da conta bancária.
 
 - __Campos__:
@@ -122,14 +122,20 @@ A responsta será o número da conta e o nome completo do usuário.
   - Código de resposta HTTP: 204 (No content)
 
 ### 3. Habilitar/desabilitar conta
-- **GET** `/account/{id}/{state}`
-- **Descrição**: Habilita/desabilita conta de acordo com o valor de **state**.
-state: ***enable** para habilitar e qualquer outro valor desabilita.
+- **PATCH** `/accounts/accountstatus/{id}/status`
+  - **Descrição**: Habilita/desabilita conta 
+    - ```json
+       [
+          {
+           "enabled": true
+          }
+       ]     
+        ```
 
 
 ### 4. Listar Contas
 (!) Com suporte a query string
-- **GET** `/account`
+- **GET** `/accounts`
 - **Descrição**: Lista todas as contas cadastradas.
 - **Resposta (200 OK)**:
   ```json
@@ -144,7 +150,7 @@ state: ***enable** para habilitar e qualquer outro valor desabilita.
 
 ### 5. Depósito
 
-- **POST** `/account/{id}/deposit`
+- **POST** `/accounts/transaction/{id}/deposit`
 - **Descrição**: Realiza um depósito na conta especificada.
 - **Body (JSON)**:
   ```json
@@ -162,7 +168,7 @@ state: ***enable** para habilitar e qualquer outro valor desabilita.
 
 ### 6. Saque
 
-- **POST** `/account/{id}/withdrawal`
+- **POST** `/accounts/transaction/{id}/withdraw`
 - **Descrição**: Realiza um saque da conta especificada.
 - **Body (JSON)**:
   ```json
@@ -180,7 +186,7 @@ state: ***enable** para habilitar e qualquer outro valor desabilita.
 
 ### 7. Transferência
 
-- **POST** `/account/{id}/money-transfer`
+- **POST** `/accounts/transaction/{id}/transfer`
 - **Descrição**: Transfere um valor da conta de origem (autenticada) para uma conta de destino.
 - **Body (JSON)**:
   ```json
@@ -194,7 +200,7 @@ state: ***enable** para habilitar e qualquer outro valor desabilita.
 
 ### 8. Consultar Saldo
 
-- **GET** `/account/{id}/balance`
+- **GET** `/accounts/balance/{id}`
 - **Descrição**: Consulta o saldo da conta.
 - **Resposta (200 OK)**
   ```json
@@ -205,7 +211,7 @@ state: ***enable** para habilitar e qualquer outro valor desabilita.
 
 ### 9. Report
 
-- **GET** `/account/{id}`
+- **GET** `/accounts/balance/{id}/report`
 - **Descrição**: Consulta de extrato.
 - **Resposta (200 OK)**
   ```json
@@ -227,11 +233,20 @@ state: ***enable** para habilitar e qualquer outro valor desabilita.
 
 ### 10. Apagar Conta
 
-- **DELETE** `/account/{id}`
+- **DELETE** `/accounts/{id}`
 - **Descrição**: Apagar conta.
 - **Resposta (204 NO CONTENT)**
 
 ---
+
+## Informações Importantes
+
+- O **ID da conta** (UUID) retornado na criação de uma conta (`"account": "e0a8d734-eb4c-4ff5-b88a-00d58f818f53"`) é o valor que deve ser utilizado como `{id}` ou `{accountId}` em todas as requisições subsequentes que operam sobre uma conta específica.
+- **Exemplo:** Se a criação de uma conta retornar `e0a8d734-eb4c-4ff5-b88a-00d58f818f53` como `account`, você usaria este ID para deletar a conta (`DELETE /account/e0a8d734-eb4c-4ff5-b88a-00d58f818f53`), consultar o saldo (`GET /account/e0a8d734-eb4c-4ff5-b88a-00d58f818f53/balance`), etc.
+
+
+
+
 
 ## 2) Considerações Finais
 

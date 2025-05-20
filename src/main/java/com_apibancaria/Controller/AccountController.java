@@ -10,13 +10,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
+
+
+
 
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
-
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
     @Autowired
     private AccountService accountService;
 
@@ -25,14 +30,19 @@ public class AccountController {
     public ResponseEntity<Map<String, String>> criarConta(@RequestBody @Valid AccountDto accountDto) {
         try {
             Account conta = accountService.createAccount(accountDto);
-            Map<String, String> resposta = new HashMap<>();
-            resposta.put("id", conta.getId().toString());
-            resposta.put("nomeCompleto", conta.getFullName());
-            return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
+            Map<String, String> resposta = new LinkedHashMap<>();
+            resposta.put("account", conta.getId().toString());
+            resposta.put("fullName", conta.getFullName());
+            return ResponseEntity.status(HttpStatus.OK).body(resposta);
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "CPF ou email já cadastrado!");
+            Map<String, String> erroResposta = new HashMap<>();
+            erroResposta.put("mensagem", "CPF ou email já cadastrado!");
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(erroResposta);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR" + e.getMessage());
+            Map<String, String> erroResposta = new HashMap<>();
+            erroResposta.put("erro", "Erro interno no servidor.");
+            erroResposta.put("mensagem", "Ocorreu um erro ao criar a conta: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erroResposta);
         }
     }
 
@@ -41,9 +51,10 @@ public class AccountController {
     public ResponseEntity<Void> atualizarConta(@PathVariable UUID idConta, @RequestBody @Valid AccountDto accountDto) {
         try {
             accountService.updateAccount(idConta, accountDto);
-            return ResponseEntity.noContent().build(); // Retorna 204 sem conteúdo
+            return ResponseEntity.noContent().build(); // Retorna 204 No Content para sucesso
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao atualizar conta", e);
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao atualizar conta: " + e.getMessage(), e);
         }
     }
 
@@ -64,12 +75,11 @@ public class AccountController {
         try {
             List<Account> contas = accountService.getAllAccounts();
             List<Map<String, Object>> resposta = new ArrayList<>();
-
             contas.forEach(conta -> {
-                Map<String, Object> dadosConta = new HashMap<>();
-                dadosConta.put("id", conta.getId().toString());
-                dadosConta.put("nome", conta.getFullName());
-                dadosConta.put("saldo", conta.getBalance());
+                Map<String, Object> dadosConta = new LinkedHashMap<>();
+                dadosConta.put("balance", conta.getBalance());
+                dadosConta.put("fullname", conta.getFullName());
+                dadosConta.put("account", conta.getId().toString());
                 resposta.add(dadosConta);
             });
 

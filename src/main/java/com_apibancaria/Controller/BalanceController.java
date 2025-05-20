@@ -66,7 +66,7 @@ public class BalanceController {
             response.put("currentBalance", account.getBalance());
             response.put("transactions", formattedTransactions);
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
