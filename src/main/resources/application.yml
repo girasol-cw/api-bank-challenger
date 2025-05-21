@@ -1,0 +1,9 @@
+services:
+  api-service:
+    # ...
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://local-postgres-compose:5432/com_apibancaria
+      # ...
+
+  local-postgres-compose:
+  # ...
